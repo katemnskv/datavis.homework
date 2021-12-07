@@ -10,7 +10,7 @@ const barChart = d3.select('#bar-chart')
             .attr('width', barWidth)
             .attr('height', height);
 
-const scatterPlot  = d3.select('#scatter-plot')
+const scattePlot  = d3.select('#scatte-plot')
             .attr('width', width)
             .attr('height', height);
 
@@ -33,8 +33,8 @@ const y = d3.scaleLinear().range([height-margin, margin]);
 const xBar = d3.scaleBand().range([margin*2, barWidth-margin]).padding(0.1);
 const yBar = d3.scaleLinear().range([height-margin, margin])
 
-const xAxis = scatterPlot.append('g').attr('transform', `translate(0, ${height-margin})`);
-const yAxis = scatterPlot.append('g').attr('transform', `translate(${margin*2}, 0)`);
+const xAxis = scattePlot.append('g').attr('transform', `translate(0, ${height-margin})`);
+const yAxis = scattePlot.append('g').attr('transform', `translate(${margin*2}, 0)`);
 
 const xLineAxis = lineChart.append('g').attr('transform', `translate(0, ${height-margin})`);
 const yLineAxis = lineChart.append('g').attr('transform', `translate(${margin*2}, 0)`);
@@ -47,23 +47,23 @@ const radiusScale = d3.scaleSqrt().range([10, 30]);
 
 loadData().then(data => {
 
-    colorScale.domain(d3.set(data.map(d=>d.region)).values());
+    colorScale.domain(d3.set(data.map(d => d.region)).values());
 
     d3.select('#range').on('change', function(){ 
         year = d3.select(this).property('value');
         yearLable.html(year);
-        updateScattePlot();
+        updateScatterPlot();
         updateBar();
     });
 
     d3.select('#radius').on('change', function(){ 
         rParam = d3.select(this).property('value');
-        updateScattePlot();
+        updateScatterPlot();
     });
 
     d3.select('#x').on('change', function(){ 
         xParam = d3.select(this).property('value');
-        updateScattePlot();
+        updateScatterPlot();
     });
 
     d3.select('#y').on('change', function(){ 
@@ -81,11 +81,32 @@ loadData().then(data => {
     }
 
     function updateScattePlot(){
+        const xValues = data.map(d=> Number(d[xParam][year])); 
+        const xDomain = d3.extent 
+        x.domain(xDomain);
+
+        const yValues = data.map(d=> Number(d[yParam][year])); 
+        const yDomain = d3.extent 
+        y.domain();
+
+        const selection = ScatterPlot.selectAll('circle').data(data);
+
+       const circles = selection.enter()
+
+            scattePlot.selectAll('circle')
+            .data(data).enter()
+                .append ('circle') /*создание элемента*/
+
+        selection.merge(circles)
+                .attr('r', 30)
+                .attr ('cx',  d => x(Number(d[xParam[year]])))
+                .attr ('cy', d => y(Number(d[yParam][year])));
+
         return;
     }
 
     updateBar();
-    updateScattePlot();
+    updateScatterPlot();
 });
 
 
