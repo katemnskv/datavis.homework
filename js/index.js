@@ -135,6 +135,13 @@ loadData().then(data => {
         let y_axis_values = data.map(d => parseFloat(d[yParam][year]) || 0);
         let radius_values = data.map(d => parseFloat(d[rParam][year]) || 0);
 
+        x.domain([d3.min(x_axis_values), d3.max(x_axis_values)]);
+        y.domain([d3.min(y_axis_values), d3.max(y_axis_values)]);
+        radiusScale.domain([d3.min(radius_values), d3.max(radius_values)]);
+
+        xAxis.call(d3.axisBottom(x));
+        yAxis.call(d3.axisLeft(y));
+
 
         const xValues = data.map(d=> Number(d[xParam][year])); 
         const xDomain = d3.extent 
