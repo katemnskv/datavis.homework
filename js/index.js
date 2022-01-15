@@ -196,7 +196,7 @@ loadData().then(data => {
                 .datum(year_value_list)
                 .attr("class", "lineData")
                 .attr("fill", "none")
-                .attr("stroke", "#FFA500")
+                .attr("stroke", "#1f77b4")
                 .attr("stroke-width", 3.0)
                 .attr("d", d3.line()
                     .x(d => x(d["year"]))
