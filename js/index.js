@@ -71,11 +71,6 @@ loadData().then(data => {
         updateScattePlot();
     });
 
-    d3.select('#param').on('change', function () {
-        param = d3.select(this).property('value');
-        updateBar();
-    });
-
     
     d3.select('#p').on('change', function(){ 
         lineParam = d3.select(this).property('value');
@@ -85,27 +80,27 @@ loadData().then(data => {
 
     function updateBar(){
         
-        let reg_names = d3.set(data.map(d=>d.region)).values();
+        let region_names = d3.set(data.map(d=>d.region)).values();
 
-        var region_mean_dict = [];
-        reg_names.forEach(function(region_names){
-          region_values = data.filter(function(d){return d.region == reg_name;});
-          region_mean_dict.push({
-              "region": reg_name, 
+        var region_and_mean_dict = [];
+        region_names.forEach(function(region_name){
+          values_for_region = data.filter(function(d){return d.region == region_name;});
+          region_and_mean_dict.push({
+              "region": region_name, 
               "mean_value": d3.mean(values_for_region, d => d[param][year])
             });
         });
 
-        xBar.domain(reg_name);
-        yBar.domain([0, d3.max(region_mean_dict.map(d => d.mean_value))])
+        xBar.domain(region_names);
+        yBar.domain([0, d3.max(region_and_mean_dict.map(d => d.mean_value))])
 
         xBarAxis.call(d3.axisBottom(xBar));
         yBarAxis.call(d3.axisLeft(yBar));
 
         barChart.selectAll("rect").remove();
-    
+
         barChart.selectAll("rect")
-            .data(region_mean_dict)
+            .data(region_and_mean_dict)
             .enter()
             .append("rect")
                 .attr("x", d => xBar(d.region))
@@ -114,9 +109,9 @@ loadData().then(data => {
                 .attr("height", d => height - margin - yBar(d.mean_value))
                 .attr("fill", d => colorScale(d.region));
 
-        barChart.selectAll("rect").on("click", function(clickedbar) {
+        barChart.selectAll("rect").on("click", function(clicked_bar) {
 
-            highlighted = clickedbar.region;
+            highlighted = clicked_bar.region;
 
             d3.selectAll("rect")
                 .transition()
@@ -175,14 +170,14 @@ loadData().then(data => {
 
             d3.select(".country-name").text(selected);
 
-            const country_id = data.findIndex(d => d.country === selected);
-            if (country_id === -1) return;
+            const country_index = data.findIndex(d => d.country === selected);
+            if (country_index === -1) return;
 
-            var selected_data = data[country_id][lineParam];
+            var data_for_selected = data[country_index][lineParam];
 
             let year_value_list = [];
             for (let currentYear = 1800; currentYear < 2021; currentYear++) {
-                year_value_list.push({"year": currentYear, "param_value": parseFloat(selected_data[currentYear]) || 0});
+                year_value_list.push({"year": currentYear, "param_value": parseFloat(data_for_selected[currentYear]) || 0});
             };
 
             let xRange = d3.values(year_value_list).map(d => d["year"]);
