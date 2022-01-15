@@ -167,46 +167,50 @@ loadData().then(data => {
 
   function  updateLinePlot() {
         
-        if (selected != "") {
+    if (selected) {
+        d3.select('.country-name').text(selected);
+        let ndata = data.filter(d => d['country'] == selected).map(d => d[lineParam])[0];
+        let n2data = [];
+        Object.entries(ndata).forEach(d => {
+            let nobj = {"year": d[0], "value": d[1]};
+            n2data.push(nobj);
+        });
 
-            d3.select(".country-name").text(selected);
+        n2data.splice(221, 5);
 
-            const country_index = data.findIndex(d => d.country === selected);
-            if (country_index === -1) return;
+        let xRange = d3.range(1800, 2021);
+        x.domain([d3.min(xRange), d3.max(xRange)]);
+        xLineAxis.call(d3.axisBottom(x));
 
-            var data_for_selected = data[country_index][lineParam];
+        let yRange = d3.values(ndata).map(d => +d);
+        y.domain([d3.min(yRange), d3.max(yRange)]);
+        yLineAxis.call(d3.axisLeft(y));
 
-            let year_value_list = [];
-            for (let currentYear = 1800; currentYear < 2021; currentYear++) {
-                year_value_list.push({"year": currentYear, "param_value": parseFloat(data_for_selected[currentYear]) || 0});
-            };
+        lineChart.append('path').attr('class', 'line').datum(n2data).enter().append('path')
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+            .attr("d", d3.line()
+                .x(function (d) {
+                    return x(+d.year)
+                })
+                .y(function (d) {
+                    return y(+d.value)
+                })
+            );
 
-            let xRange = d3.values(year_value_list).map(d => d["year"]);
-            let yRange = d3.values(year_value_list).map(d => d["param_value"]);
-
-            x.domain([d3.min(xRange), d3.max(xRange)]);
-            y.domain([d3.min(yRange) * 0.5, d3.max(yRange) * 1.1]);
-
-            xLineAxis.call(d3.axisBottom(x));
-            yLineAxis.call(d3.axisLeft(y));
-
-            lineChart.select(".lineData").remove();
-
-            lineChart.append('g')
-                .append('path')
-                .datum(year_value_list)
-                .attr("class", "lineData")
-                .attr("fill", "none")
-                .attr("stroke", "#ffc0cb")
-                .attr("stroke-width", 2.0)
-                .attr("d", d3.line()
-                    .x(d => x(d["year"]))
-                    .y(d => y(d["param_value"]))
-                    );
-        }
+        lineChart.selectAll('.line').datum(n2data)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+            .attr("d", d3.line()
+                .x(d => x(+d.year))
+                .y(d => y(+d.value))
+            );
 
         return;
     }
+}
 
 
 
