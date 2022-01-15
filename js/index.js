@@ -125,11 +125,17 @@ loadData().then(data => {
                   .style("opacity", d => d.region == highlighted ? 1.0 : 0.0);
   
           });
-          
+
         return;
     }
 
     function updateScattePlot(){
+
+        let x_axis_values = data.map(d => parseFloat(d[xParam][year]) || 0);
+        let y_axis_values = data.map(d => parseFloat(d[yParam][year]) || 0);
+        let radius_values = data.map(d => parseFloat(d[rParam][year]) || 0);
+
+
         const xValues = data.map(d=> Number(d[xParam][year])); 
         const xDomain = d3.extent 
         x.domain(xDomain);
