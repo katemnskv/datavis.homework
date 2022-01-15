@@ -167,6 +167,50 @@ loadData().then(data => {
         return;
     }
 
+    function  updateLinePlot() {
+        
+        if (selected != "") {
+
+            d3.select(".country-name").text(selected);
+
+            const country_index = data.findIndex(d => d.country === selected);
+            if (country_index === -1) return;
+
+            var data_for_selected = data[country_index][lineParam];
+
+            let year_value_list = [];
+            for (let currentYear = 1800; currentYear < 2021; currentYear++) {
+                year_value_list.push({"year": currentYear, "param_value": parseFloat(data_for_selected[currentYear]) || 0});
+            };
+
+            let xRange = d3.values(year_value_list).map(d => d["year"]);
+            let yRange = d3.values(year_value_list).map(d => d["param_value"]);
+
+            x.domain([d3.min(xRange), d3.max(xRange)]);
+            y.domain([d3.min(yRange) * 0.9, d3.max(yRange) * 1.1]);
+
+            xLineAxis.call(d3.axisBottom(x));
+            yLineAxis.call(d3.axisLeft(y));
+
+            lineChart.select(".lineData").remove();
+
+            lineChart.append('g')
+                .append('path')
+                .datum(year_value_list)
+                .attr("class", "lineData")
+                .attr("fill", "none")
+                .attr("stroke", "#FFA500")
+                .attr("stroke-width", 3.0)
+                .attr("d", d3.line()
+                    .x(d => x(d["year"]))
+                    .y(d => y(d["param_value"]))
+                    );
+        }
+
+        return;
+    }
+
+
     updateBar();
     updateScatterPlot();
 });
