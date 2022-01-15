@@ -214,7 +214,7 @@ loadData().then(data => {
 
             updateBar();
             updateScatterPlot();
-        });
+        
 
 
 async function loadData() {
