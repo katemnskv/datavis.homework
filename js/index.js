@@ -52,23 +52,23 @@ loadData().then(data => {
     d3.select('#range').on('change', function(){ 
         year = d3.select(this).property('value');
         yearLable.html(year);
-        updateScattePlot();
+        updateScatterPlot();
         updateBar();
     });
 
     d3.select('#radius').on('change', function(){ 
         rParam = d3.select(this).property('value');
-        updateScattePlot();
+        updateScatterPlot();
     });
 
     d3.select('#x').on('change', function(){ 
         xParam = d3.select(this).property('value');
-        updateScattePlot();
+        updateScatterPlot();
     });
 
     d3.select('#y').on('change', function(){ 
         yParam = d3.select(this).property('value');
-        updateScattePlot();
+        updateScatterPlot();
     });
 
     
@@ -80,27 +80,28 @@ loadData().then(data => {
 
     function updateBar(){
         
-        let region_names = d3.set(data.map(d=>d.region)).values();
+        let regions = d3.set(data.map(d=>d.region)).values();
 
-        var region_mean_dict = [];
-        region_names.forEach(function(region_name){
+        var region_mean = [];
+        regions.forEach(function(region_name){
           values_for_region = data.filter(function(d){return d.region == region_name;});
-          region_mean_dict.push({
+          region_mean.push({
               "region": region_name, 
               "mean_value": d3.mean(values_for_region, d => d[param][year])
             });
         });
 
-        xBar.domain(region_names);
-        yBar.domain([0, d3.max(region_mean_dict.map(d => d.mean_value))])
+        xBar.domain(regions);
+        yBar.domain([0, d3.max(region_mean.map(d => d.mean_value))])
 
         xBarAxis.call(d3.axisBottom(xBar));
         yBarAxis.call(d3.axisLeft(yBar));
 
         barChart.selectAll("rect").remove();
 
+
         barChart.selectAll("rect")
-            .data(region_mean_dict)
+            .data(region_mean)
             .enter()
             .append("rect")
                 .attr("x", d => xBar(d.region))
@@ -126,7 +127,7 @@ loadData().then(data => {
         return;
     }
 
-    function updateScattePlot(){
+    function updateScatterPlot(){
         
         let x_axis_values = data.map(d => parseFloat(d[xParam][year]) || 0);
         let y_axis_values = data.map(d => parseFloat(d[yParam][year]) || 0);
@@ -210,7 +211,7 @@ loadData().then(data => {
 
 
             updateBar();
-            updateScattePlot();
+            updateScatterPlot();
         });
 
 
