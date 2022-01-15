@@ -166,29 +166,7 @@ loadData().then(data => {
         return;
     }
 
-        const xValues = data.map(d=> Number(d[xParam][year])); 
-        const xDomain = d3.extent 
-        x.domain(xDomain);
-
-        const yValues = data.map(d=> Number(d[yParam][year])); 
-        const yDomain = d3.extent 
-        y.domain();
-
-        const selection = ScatterPlot.selectAll('circle').data(data);
-
-       const circles = selection.enter()
-
-            scattePlot.selectAll('circle')
-            .data(data).enter()
-                .append ('circle') /*создание элемента*/
-
-        selection.merge(circles)
-                .attr('r', 30)
-                .attr ('cx',  d => x(Number(d[xParam[year]])))
-                .attr ('cy', d => y(Number(d[yParam][year])));
-
-        return;
-    }
+       
 
     function  updateLinePlot() {
         
@@ -234,9 +212,9 @@ loadData().then(data => {
     }
 
 
-    updateBar();
-    updateScatterPlot();
-});
+            updateBar();
+            updateScatterPlot();
+        });
 
 
 async function loadData() {
