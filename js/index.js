@@ -74,10 +74,9 @@ loadData().then(data => {
     d3.select('#param').on('change', function(){ 
         param = d3.select(this).property('value');
         updateBar();
+        updateLinePlot();
     });
 
-    d3.select('#p').on('change',function(){
-        param = d3.select(this).property('value');
         updateLineChart();
     });
 
@@ -142,6 +141,30 @@ loadData().then(data => {
         xAxis.call(d3.axisBottom(x));
         yAxis.call(d3.axisLeft(y));
 
+        scatterPlot.selectAll("circle").remove();
+
+        scatterPlot.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+                .attr("cx", d => x(d[xParam][year]))
+                .attr("cy", d => y(d[yParam][year]))
+                .attr("r", d => radiusScale(d[rParam][year]))
+                .attr("fill", d => colorScale(d["region"]))
+
+        scatterPlot.selectAll("circle").on("click", function(clicked_circle) {
+
+            selected = clicked_circle.country;
+
+            d3.selectAll("circle")
+                .transition()
+                .attr("stroke-width", d => d.country == selected ? 3.0 : 1.0);
+
+            updateLinePlot();
+        })
+        
+        return;
+    }
 
         const xValues = data.map(d=> Number(d[xParam][year])); 
         const xDomain = d3.extent 
