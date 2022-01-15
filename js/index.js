@@ -182,7 +182,7 @@ loadData().then(data => {
 
             let year_value_list = [];
             for (let currentYear = 1800; currentYear < 2021; currentYear++) {
-                year_value_list.push({"year": currentYear, "param_value": parseFloat(data_for_selected[currentYear]) || 0});
+                year_value_list.push({"year": currentYear, "param_value": parseFloat(selected_data[currentYear]) || 0});
             };
 
             let xRange = d3.values(year_value_list).map(d => d["year"]);
