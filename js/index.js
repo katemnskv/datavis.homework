@@ -201,7 +201,7 @@ loadData().then(data => {
 
         lineChart.selectAll('.line').datum(n2data)
             .attr("fill", "none")
-            .attr("stroke", "steelblue")
+            .attr("stroke", "#ffc0cb")
             .attr("stroke-width", 1.5)
             .attr("d", d3.line()
                 .x(d => x(+d.year))
