@@ -70,6 +70,11 @@ loadData().then(data => {
         yParam = d3.select(this).property('value');
         updateScattePlot();
     });
+    
+    d3.select('#param').on('change', function () {
+        param = d3.select(this).property('value');
+        updateBar();
+    });
 
     
     d3.select('#p').on('change', function(){ 
@@ -80,10 +85,10 @@ loadData().then(data => {
 
     function updateBar(){
         
-        let region_names = d3.set(data.map(d=>d.region)).values();
+        let region_name = d3.set(data.map(d=>d.region)).values();
 
         var region_and_mean_dict = [];
-        region_names.forEach(function(region_name){
+        region_name.forEach(function(region_name){
           values_for_region = data.filter(function(d){return d.region == region_name;});
           region_and_mean_dict.push({
               "region": region_name, 
@@ -91,7 +96,7 @@ loadData().then(data => {
             });
         });
 
-        xBar.domain(region_names);
+        xBar.domain(region_name);
         yBar.domain([0, d3.max(region_and_mean_dict.map(d => d.mean_value))])
 
         xBarAxis.call(d3.axisBottom(xBar));
