@@ -70,7 +70,7 @@ loadData().then(data => {
         yParam = d3.select(this).property('value');
         updateScattePlot();
     });
-    
+
     d3.select('#param').on('change', function () {
         param = d3.select(this).property('value');
         updateBar();
@@ -103,7 +103,7 @@ loadData().then(data => {
         yBarAxis.call(d3.axisLeft(yBar));
 
         barChart.selectAll("rect").remove();
-
+    
         barChart.selectAll("rect")
             .data(region_and_mean_dict)
             .enter()
@@ -175,10 +175,10 @@ loadData().then(data => {
 
             d3.select(".country-name").text(selected);
 
-            const country_index = data.findIndex(d => d.country === selected);
-            if (country_index === -1) return;
+            const country_id = data.findIndex(d => d.country === selected);
+            if (country_id === -1) return;
 
-            var data_for_selected = data[country_index][lineParam];
+            var selected_data = data[country_id][lineParam];
 
             let year_value_list = [];
             for (let currentYear = 1800; currentYear < 2021; currentYear++) {
