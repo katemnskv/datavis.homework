@@ -189,7 +189,7 @@ loadData().then(data => {
         lineChart.append('path').attr('class', 'line').datum(n2data).enter().append('path')
             .attr("fill", "none")
             .attr("stroke", "#ffc0cb")
-            .attr("stroke-width", 1.2)
+            .attr("stroke-width", 2)
             .attr("d", d3.line()
                 .x(function (d) {
                     return x(+d.year)
